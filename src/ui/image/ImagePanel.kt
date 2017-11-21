@@ -1,23 +1,35 @@
 package ui.image
 
-import IMAGE_HEIGHT
-import IMAGE_WIDTH
 import ui.buttons.ButtonsPanel
 import java.awt.Dimension
+import java.awt.Graphics
+import java.awt.Graphics2D
 import java.awt.image.BufferedImage
 import javax.swing.JPanel
 
-class ImagePanel : JPanel(), ButtonsPanel.ImageIOListener {
+class ImagePanel : JPanel(), ImageContract.View, ButtonsPanel.ImageIOListener {
 
-    lateinit var img: BufferedImage
+    private lateinit var image: BufferedImage
+    private var presenter = ImagePresenter()
 
     init {
-        preferredSize = Dimension(IMAGE_WIDTH, IMAGE_HEIGHT)
+        presenter.attachView(this)
     }
 
-    override fun getImage(): BufferedImage? = img
+    override fun paintComponent(g: Graphics) {
+        super.paintComponent(g)
+        if (::image.isInitialized){
+            g.drawImage(image, 0, 0, null)
+            presenter.drawCoordinateSystem(g as Graphics2D, image.width, image.height)
+        }
+    }
+
+    override fun getImage(): BufferedImage? = image
 
     override fun setImage(image: BufferedImage) {
-        img =  image
+        this.image =  image
+        preferredSize = Dimension(image.width, image.height)
+        repaint()
+        revalidate()
     }
 }
