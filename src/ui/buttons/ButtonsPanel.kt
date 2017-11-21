@@ -16,6 +16,7 @@ class ButtonsPanel(var imagePanel: ImageIOListener): JPanel(), ButtonsContract.V
     val presenter = ButtonsPresenter()
 
     init {
+        presenter.attachView(this)
         loadButton.addActionListener(this)
         saveButton.addActionListener(this)
         preferredSize = Dimension(BUTTONS_WIDTH, BUTTONS_HEIGHT)
@@ -25,8 +26,12 @@ class ButtonsPanel(var imagePanel: ImageIOListener): JPanel(), ButtonsContract.V
 
     //ButtonListener
     override fun actionPerformed(e: ActionEvent) {
-        when(e){
-            loadButton -> imagePanel.setImage(presenter.loadImage())
+        when(e.source){
+            loadButton -> {
+                val image = presenter.loadImage()
+                if(image != null)
+                    imagePanel.setImage(image)
+            }
             saveButton -> {
                 val image = imagePanel.getImage()
                 if(image != null)

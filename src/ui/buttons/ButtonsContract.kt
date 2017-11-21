@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage
 interface ButtonsContract {
     interface Presenter {
 
-        fun loadImage(): BufferedImage
+        fun loadImage(): BufferedImage?
 
         fun saveImage(image: BufferedImage)
 

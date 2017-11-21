@@ -3,7 +3,7 @@ package util
 import java.io.File
 import javax.swing.filechooser.FileFilter
 
-class FileExtensionHelper: FileFilter {
+class FileExtensionHelper: FileFilter() {
 
     object Extensions {
         const val jpeg = "jpeg"
@@ -29,7 +29,9 @@ class FileExtensionHelper: FileFilter {
         } else false
     }
 
-    fun getExtension(f: File): String? {
+    override fun getDescription(): String = "Image files"
+
+    private fun getExtension(f: File): String? {
         var ext: String? = null
         val s = f.name
         val i = s.lastIndexOf('.')
@@ -39,4 +41,5 @@ class FileExtensionHelper: FileFilter {
 
         return ext
     }
+
 }

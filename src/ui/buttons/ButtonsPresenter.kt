@@ -1,32 +1,40 @@
 package ui.buttons
 
-import jdk.nashorn.internal.runtime.regexp.joni.Config.log
 import java.awt.image.BufferedImage
 import javax.swing.JFileChooser
 import util.FileExtensionHelper
-
+import java.io.IOException
+import javax.imageio.ImageIO
 
 class ButtonsPresenter : ButtonsContract.Presenter {
+
     lateinit var view: ButtonsContract.View
     val fc = JFileChooser()
 
+    init {
+        fc.isAcceptAllFileFilterUsed = false
+        fc.addChoosableFileFilter(FileExtensionHelper())
+    }
 
-    override fun loadImage(): BufferedImage {
-
+    override fun loadImage(): BufferedImage? {
+        var image: BufferedImage? = null
         val returnVal = fc.showOpenDialog(view as ButtonsPanel)
-
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            val file = fc.selectedFile
-            fc.isAcceptAllFileFilterUsed = false
-            fc.addChoosableFileFilter(FileExtensionHelper())
-            log.append("Opening: " + file.name + "." )
-        } else {
-            log.append("Open command cancelled by user.")
+            try {
+                image = ImageIO.read(fc.selectedFile)
+            }catch (ex: IOException) {
+                ex.printStackTrace()
+            }
         }
+        return image
     }
 
     override fun saveImage(image: BufferedImage) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //fc.fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
+        val returnVal = fc.showSaveDialog(view as ButtonsPanel)
+        if(returnVal == JFileChooser.APPROVE_OPTION){
+            ImageIO.write(image, "jpg", fc.selectedFile)
+        }
     }
 
     override fun attachView(view: ButtonsContract.View) {
