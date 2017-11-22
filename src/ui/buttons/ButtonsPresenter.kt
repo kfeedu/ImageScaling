@@ -1,43 +1,26 @@
 package ui.buttons
 
+import data.DataManager
+import data.model.Figure
 import java.awt.image.BufferedImage
-import javax.swing.JFileChooser
-import util.FileExtensionHelper
-import java.io.IOException
-import javax.imageio.ImageIO
+import java.awt.Component
 
 class ButtonsPresenter : ButtonsContract.Presenter {
 
     lateinit var view: ButtonsContract.View
-    val fc = JFileChooser()
+    lateinit var dataManager:  DataManager
 
-    init {
-        fc.isAcceptAllFileFilterUsed = false
-        fc.addChoosableFileFilter(FileExtensionHelper())
-    }
+    override fun loadImage(): BufferedImage? =
+            dataManager.loadRasterImage()
 
-    override fun loadImage(): BufferedImage? {
-        var image: BufferedImage? = null
-        val returnVal = fc.showOpenDialog(view as ButtonsPanel)
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            try {
-                image = ImageIO.read(fc.selectedFile)
-            }catch (ex: IOException) {
-                ex.printStackTrace()
-            }
-        }
-        return image
-    }
+    override fun saveImage(image: BufferedImage) =
+            dataManager.saveRasterImage(image)
 
-    override fun saveImage(image: BufferedImage) {
-        //fc.fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
-        val returnVal = fc.showSaveDialog(view as ButtonsPanel)
-        if(returnVal == JFileChooser.APPROVE_OPTION){
-            ImageIO.write(image, "jpg", fc.selectedFile)
-        }
-    }
+    override fun loadVectorImage(): List<Figure> =
+            dataManager.loadVectorImage()
 
     override fun attachView(view: ButtonsContract.View) {
         this.view = view
+        dataManager = DataManager(view as Component)
     }
 }

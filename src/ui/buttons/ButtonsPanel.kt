@@ -2,6 +2,7 @@ package ui.buttons
 
 import BUTTONS_HEIGHT
 import BUTTONS_WIDTH
+import data.model.Figure
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
@@ -9,19 +10,25 @@ import java.awt.image.BufferedImage
 import javax.swing.JButton
 import javax.swing.JPanel
 
-class ButtonsPanel(var imagePanel: ImageIOListener): JPanel(), ButtonsContract.View , ActionListener {
+class ButtonsPanel(var imageIOListener: ImageIOListener): JPanel(), ButtonsContract.View , ActionListener {
 
-    val loadButton = JButton("LOAD")
-    val saveButton = JButton("SAVE")
-    val presenter = ButtonsPresenter()
+    private val loadButton = JButton("LOAD")
+    private val saveButton = JButton("SAVE")
+    private val loadVectorImageButton = JButton("LOAD VECTOR IMAGE")
+    private val saveVectorImageButton = JButton("SAVE VECTOR IMAGE")
+    private val presenter = ButtonsPresenter()
 
     init {
         presenter.attachView(this)
         loadButton.addActionListener(this)
         saveButton.addActionListener(this)
+        loadVectorImageButton.addActionListener(this)
+        saveVectorImageButton.addActionListener(this)
         preferredSize = Dimension(BUTTONS_WIDTH, BUTTONS_HEIGHT)
         add(loadButton)
         add(saveButton)
+        add(loadVectorImageButton)
+        add(saveVectorImageButton)
     }
 
     //ButtonListener
@@ -30,21 +37,30 @@ class ButtonsPanel(var imagePanel: ImageIOListener): JPanel(), ButtonsContract.V
             loadButton -> {
                 val image = presenter.loadImage()
                 if(image != null)
-                    imagePanel.setImage(image)
+                    imageIOListener.setRasterImage(image)
             }
             saveButton -> {
-                val image = imagePanel.getImage()
+                val image = imageIOListener.getRasterImage()
                 if(image != null)
                     presenter.saveImage(image)
 
+            }
+            loadVectorImageButton -> {
+                val figures = presenter.loadVectorImage()
+                if(!figures.isEmpty())
+                    imageIOListener.setVectorImage(figures)
             }
         }
     }
 
     interface ImageIOListener {
 
-        fun getImage(): BufferedImage?
+        fun getRasterImage(): BufferedImage?
 
-        fun setImage(image: BufferedImage)
+        fun setRasterImage(image: BufferedImage)
+
+        fun getVectorImage(): List<Figure>?
+
+        fun setVectorImage(figures: List<Figure>)
     }
 }
