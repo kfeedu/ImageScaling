@@ -10,7 +10,7 @@ class App {
 
     private val mainWindow = MainWindow(APP_NAME)
     private val imagePanel = ImagePanel()
-    private val settingsPanel = SettingsPanel()
+    private val settingsPanel = SettingsPanel(imagePanel)
     private val buttonsPanel = ButtonsPanel(imagePanel)
     private val layeredPanel = LayeredImagePanel(imagePanel)
 

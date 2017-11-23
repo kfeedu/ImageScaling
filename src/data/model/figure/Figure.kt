@@ -1,4 +1,4 @@
-package data.model
+package data.model.figure
 
 import java.awt.Graphics2D
 

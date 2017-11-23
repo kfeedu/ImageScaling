@@ -2,7 +2,7 @@ package ui.buttons
 
 import BUTTONS_HEIGHT
 import BUTTONS_WIDTH
-import data.model.Figure
+import data.model.figure.Figure
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener

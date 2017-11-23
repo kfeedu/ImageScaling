@@ -1,13 +1,15 @@
 package ui.image
 
-import data.model.Figure
+import data.model.figure.Figure
+import data.model.transformation.Transformation
 import ui.buttons.ButtonsPanel
+import ui.settings.SettingsPanel
 import java.awt.Dimension
 import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage
 import javax.swing.JPanel
-class ImagePanel : JPanel(), ImageContract.View, ButtonsPanel.ImageIOListener {
+class ImagePanel : JPanel(), ImageContract.View, ButtonsPanel.ImageIOListener, SettingsPanel.ImageTransformListener {
 
     private lateinit var image: BufferedImage
     private lateinit var figures: List<Figure>
@@ -32,6 +34,11 @@ class ImagePanel : JPanel(), ImageContract.View, ButtonsPanel.ImageIOListener {
     //MVP functions
     override fun setPrefferedSize(prefferedSize: Dimension) {
         this.preferredSize = prefferedSize
+    }
+
+    //ImageTransformListener functions
+    override fun transformImage(transformations: List<Transformation>) {
+
     }
 
     //ImageIOListener functions

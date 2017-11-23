@@ -1,6 +1,6 @@
 package ui.buttons
 
-import data.model.Figure
+import data.model.figure.Figure
 import java.awt.image.BufferedImage
 
 interface ButtonsContract {

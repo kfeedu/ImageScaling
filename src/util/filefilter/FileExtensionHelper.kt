@@ -1,8 +1,5 @@
-package util
+package util.filefilter
 
-import util.filefilter.ImageFileFilter
-import util.filefilter.TextFileFilter
-import java.io.File
 import javax.swing.filechooser.FileFilter
 
 class FileExtensionHelper {

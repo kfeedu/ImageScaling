@@ -1,5 +1,6 @@
-package data.model
+package data.model.figure
 
+import data.model.figure.Figure
 import java.awt.Graphics2D
 
 class Line(val startPoint: Pair<Int, Int>, val endPoint: Pair<Int, Int>): Figure(){

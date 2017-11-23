@@ -1,7 +1,7 @@
 package ui.buttons
 
 import data.DataManager
-import data.model.Figure
+import data.model.figure.Figure
 import java.awt.image.BufferedImage
 import java.awt.Component
 
