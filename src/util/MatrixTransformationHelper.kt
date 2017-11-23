@@ -2,13 +2,8 @@ package util
 
 import org.ejml.simple.SimpleMatrix
 
-class MatrixTransformationHelper private constructor() {
+class MatrixTransformationHelper {
 
-    private object Holder { val INSTANCE = MatrixTransformationHelper()}
-
-    companion object {
-        val instance: MatrixTransformationHelper by lazy { Holder.INSTANCE }
-    }
 
     var transformationMatrix: SimpleMatrix = SimpleMatrix.identity(3)
 
@@ -29,29 +24,29 @@ class MatrixTransformationHelper private constructor() {
 
     private fun getRotationMatrix(angle: Double, clockwise: Boolean): SimpleMatrix {
         val matrix = SimpleMatrix.identity(3)
-        matrix.set(1, 1, Math.cos(angle))
-        matrix.set(2, 2, Math.cos(angle))
+        matrix.set(0, 0, Math.cos(Math.toRadians(angle)))
+        matrix.set(1, 1, Math.cos(Math.toRadians(angle)))
         if(clockwise){
-            matrix.set(1, 2, -Math.sin(angle))
-            matrix.set(2, 1, Math.sin(angle))
+            matrix.set(0, 1, -Math.sin(Math.toRadians(angle)))
+            matrix.set(1, 0, Math.sin(Math.toRadians(angle)))
         }else{
-            matrix.set(1, 2, Math.sin(angle))
-            matrix.set(2, 1, -Math.sin(angle))
+            matrix.set(0, 1, Math.sin(Math.toRadians(angle)))
+            matrix.set(1, 0, -Math.sin(Math.toRadians(angle)))
         }
         return matrix
     }
 
     private fun getTransitionMatrix(x: Double, y: Double): SimpleMatrix {
         val matrix = SimpleMatrix.identity(3)
-        matrix.set(3,1, x)
-        matrix.set(3,2, y)
+        matrix.set(2,0, x)
+        matrix.set(2,1, y)
         return matrix
     }
 
     private fun getScalingMatrix(x: Double, y: Double): SimpleMatrix {
         val matrix = SimpleMatrix.identity(3)
-        matrix.set(1, 1, x)
-        matrix.set(2, 2, y)
+        matrix.set(0, 0, x)
+        matrix.set(1, 1, y)
         return matrix
     }
 }

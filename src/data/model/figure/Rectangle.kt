@@ -1,10 +1,9 @@
 package data.model.figure
 
-import data.model.figure.Figure
 import java.awt.Graphics2D
 
-class Rectangle(val startPoint: Pair<Int, Int>, val endPoint: Pair<Int, Int>): Figure() {
-    override fun draw(graphics2D: Graphics2D) {
+class Rectangle(var startPoint: Pair<Int, Int>, var endPoint: Pair<Int, Int>): Figure() {
+    override fun draw(graphics2D: Graphics2D, offsetX: Int, offsetY: Int) {
         var width = endPoint.first - startPoint.first
         var height = endPoint.second - startPoint.second
         var x = startPoint.first
@@ -18,10 +17,15 @@ class Rectangle(val startPoint: Pair<Int, Int>, val endPoint: Pair<Int, Int>): F
             y+=height
             height = -height
         }
-        graphics2D.drawRect(x, y, width, height )
+        graphics2D.drawRect(x + offsetX, y + offsetY, width, height )
     }
 
     override fun getPointPairs(): List<Pair<Int, Int>> {
         return listOf(startPoint, endPoint)
+    }
+
+    override fun setPointPairs(newPoints: List<Pair<Int, Int>>) {
+        startPoint = newPoints[0]
+        endPoint = newPoints[1]
     }
 }

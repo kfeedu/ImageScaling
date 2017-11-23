@@ -1,4 +1,4 @@
-package util
+package util.inputfilters
 
 import javax.swing.text.AttributeSet
 import javax.swing.text.DocumentFilter
