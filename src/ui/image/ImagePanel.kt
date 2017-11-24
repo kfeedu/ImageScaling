@@ -45,10 +45,10 @@ class ImagePanel : JPanel(), ImageContract.View, ButtonsPanel.ImageIOListener, S
             ImageType.VECTOR ->
                 presenter.drawVector((imageManipulator as VectorImageManipulator).rawVectors, g as Graphics2D, imageOffsetX, imageOffsetY)
         }
-        presenter.drawCoordinateSystem(g as Graphics2D, preferredSize, offsetX, offsetY)
         if (lineParamA != 0.0 && lineParamA != 0.0)
-            presenter.drawLine(g, lineParamA, lineParamB, preferredSize,
-                    offsetX, offsetY)
+            presenter.drawLine(g as Graphics2D, lineParamA, lineParamB, preferredSize, offsetX, offsetY)
+
+        presenter.drawCoordinateSystem(g as Graphics2D, preferredSize, offsetX, offsetY)
     }
 
     //MVP functions
