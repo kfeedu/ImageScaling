@@ -9,18 +9,18 @@ import javax.swing.JButton
 import javax.swing.JLayeredPane
 import javax.swing.JScrollPane
 
-class LayeredImagePanel(imagePanel: ImagePanel): JLayeredPane(), ActionListener {
+class LayeredImagePanel(imagePanel: ImagePanel) : JLayeredPane(), ActionListener {
 
     val rasterButton = JButton("R")
     val vektorButton = JButton("V")
 
-    init{
+    init {
         size = Dimension(IMAGE_WIDTH, IMAGE_HEIGHT)
-        rasterButton.setBounds(0,0,50,50)
+        rasterButton.setBounds(0, 0, 50, 50)
         rasterButton.addActionListener(this)
         add(rasterButton)
 
-        vektorButton.setBounds(50,0,50,50)
+        vektorButton.setBounds(50, 0, 50, 50)
         vektorButton.addActionListener(this)
         add(vektorButton)
 
@@ -32,9 +32,11 @@ class LayeredImagePanel(imagePanel: ImagePanel): JLayeredPane(), ActionListener 
 
     //ButtonListener
     override fun actionPerformed(e: ActionEvent) {
-        when(e.source){
-            rasterButton -> {}
-            vektorButton -> {}
+        when (e.source) {
+            rasterButton -> {
+            }
+            vektorButton -> {
+            }
         }
     }
 }

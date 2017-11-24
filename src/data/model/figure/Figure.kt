@@ -7,10 +7,11 @@ abstract class Figure {
 
     abstract fun getPointPairs(): List<Pair<Int, Int>>
 
-    abstract fun setPointPairs(newPoints: List<Pair<Int,Int>>)
+    abstract fun setPointPairs(newPoints: List<Pair<Int, Int>>)
+
 }
 
-enum class Figures{
+enum class Figures {
     RECTANGLE,
     LINE,
     POLYGON

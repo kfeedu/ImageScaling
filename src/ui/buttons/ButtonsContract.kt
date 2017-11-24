@@ -12,6 +12,8 @@ interface ButtonsContract {
 
         fun loadVectorImage(): List<Figure>
 
+        fun saveVectorImage(list: List<Figure>)
+
         fun attachView(view: ButtonsContract.View)
     }
 

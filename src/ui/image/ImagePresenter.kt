@@ -62,28 +62,18 @@ class ImagePresenter : ImageContract.Presenter {
         g.drawLine(0, offsetY, x, offsetY)
         g.drawLine(offsetX, 0, offsetX, y)
 
-        for(i in offsetX..dimension.width step 20){
+        for (i in offsetX..dimension.width step 20) {
             g.drawLine(i, offsetY + 3, i, offsetY - 3)
         }
-        for(i in offsetX downTo 0 step 20){
+        for (i in offsetX downTo 0 step 20) {
             g.drawLine(i, offsetY + 3, i, offsetY - 3)
         }
-
-//        for (i in x / 2..x step 20) {
-//
-//            g.drawLine(x - i, offsetY + 3, x - i, offsetY - 3)
-//        }
         for (j in offsetY..dimension.height step 20) {
             g.drawLine(offsetX + 3, j, offsetX - 3, j)
         }
         for (j in offsetY downTo 0 step 20) {
             g.drawLine(offsetX + 3, j, offsetX - 3, j)
         }
-//
-//        for (j in y / 2..y step 20) {
-//            g.drawLine(offsetX + 3, j, offsetX - 3, j)
-//            g.drawLine(offsetX + 3, y - j, offsetX - 3, y - j)
-//        }
     }
 
     override fun setVectorImageDimension(figures: List<Figure>) {

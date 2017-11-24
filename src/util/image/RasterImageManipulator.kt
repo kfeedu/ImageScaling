@@ -17,7 +17,6 @@ class RasterImageManipulator(private var rawImage: BufferedImage) : ImageManipul
 
     init {
         resultImage = rawImage
-
         //setting initial values
         width = rawImage.width
         height = rawImage.height
@@ -80,9 +79,9 @@ class RasterImageManipulator(private var rawImage: BufferedImage) : ImageManipul
                 val yDst = point.get(0, 1) //* ratioY
 
                 //to je hack xdd
-                try{
+                try {
                     resultImage.setRGB(x + Math.abs(xOffset.first), y + Math.abs(yOffset.first), getRgbBilinear(xDst, yDst))
-                }catch(ex: Exception){
+                } catch (ex: Exception) {
 
                 }
             }
@@ -91,7 +90,7 @@ class RasterImageManipulator(private var rawImage: BufferedImage) : ImageManipul
 
     private fun getRgbBilinear(xDst: Double, yDst: Double): Int {
         //to je kolejny hack XD
-        try{
+        try {
             val point00 = getIntFromRGB(rawImage.getRGB(xDst.nextDown().roundToInt(), yDst.nextUp().roundToInt()))
             val point01 = getIntFromRGB(rawImage.getRGB(xDst.nextUp().roundToInt(), yDst.nextUp().roundToInt()))
             val point10 = getIntFromRGB(rawImage.getRGB(xDst.nextDown().roundToInt(), yDst.nextDown().roundToInt()))
@@ -108,7 +107,8 @@ class RasterImageManipulator(private var rawImage: BufferedImage) : ImageManipul
                     point10.third.toDouble(), point11.third.toDouble()).roundToInt()
 
             return int2RGB(red, green, blue)
-        }catch(ex: Exception){ }
+        } catch (ex: Exception) {
+        }
         return int2RGB(255, 255, 255)
     }
 
@@ -133,17 +133,17 @@ class RasterImageManipulator(private var rawImage: BufferedImage) : ImageManipul
         val minWidth = getOffset(xPositionMatrix).first
         val minHeight = getOffset(yPositionMatrix).first
 
-        if(minWidth < 0){
+        if (minWidth < 0) {
             offsetX = initialOffsetX + Math.abs(minWidth)
             imageOffsetX = Math.abs(minWidth)
-        }else{
+        } else {
             offsetX = initialOffsetX
             imageOffsetX = 0
         }
-        if(minHeight < 0){
+        if (minHeight < 0) {
             offsetY = initialOffsetY + Math.abs(minHeight)
             imageOffsetY = Math.abs(minHeight)
-        }else{
+        } else {
             offsetY = initialOffsetY
             imageOffsetY = 0
         }
@@ -154,10 +154,10 @@ class RasterImageManipulator(private var rawImage: BufferedImage) : ImageManipul
         var max = 0.0
         for (x in 0 until matrix.numRows()) {
             for (y in 0 until matrix.numCols()) {
-                val pointX = matrix.get(x,y)
-                if(pointX < min)
+                val pointX = matrix.get(x, y)
+                if (pointX < min)
                     min = pointX
-                if(pointX > max)
+                if (pointX > max)
                     max = pointX
             }
         }

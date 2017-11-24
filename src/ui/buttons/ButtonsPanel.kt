@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage
 import javax.swing.JButton
 import javax.swing.JPanel
 
-class ButtonsPanel(var imageIOListener: ImageIOListener): JPanel(), ButtonsContract.View , ActionListener {
+class ButtonsPanel(var imageIOListener: ImageIOListener) : JPanel(), ButtonsContract.View, ActionListener {
 
     private val loadButton = JButton("LOAD")
     private val saveButton = JButton("SAVE")
@@ -33,22 +33,27 @@ class ButtonsPanel(var imageIOListener: ImageIOListener): JPanel(), ButtonsContr
 
     //ButtonListener
     override fun actionPerformed(e: ActionEvent) {
-        when(e.source){
+        when (e.source) {
             loadButton -> {
                 val image = presenter.loadImage()
-                if(image != null)
+                if (image != null)
                     imageIOListener.setRasterImage(image)
             }
             saveButton -> {
                 val image = imageIOListener.getRasterImage()
-                if(image != null)
+                if (image != null)
                     presenter.saveImage(image)
 
             }
             loadVectorImageButton -> {
                 val figures = presenter.loadVectorImage()
-                if(!figures.isEmpty())
+                if (!figures.isEmpty())
                     imageIOListener.setVectorImage(figures)
+            }
+            saveVectorImageButton -> {
+                val figures = imageIOListener.getVectorImage()
+                if (figures != null)
+                    presenter.saveVectorImage(figures)
             }
         }
     }

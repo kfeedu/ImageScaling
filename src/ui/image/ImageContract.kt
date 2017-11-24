@@ -3,14 +3,13 @@ package ui.image
 import data.model.figure.Figure
 import data.model.transformation.Transformation
 import util.image.ImageManipulator
-import util.image.VectorImageManipulator
 import java.awt.Dimension
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage
 
-interface ImageContract{
+interface ImageContract {
 
-    interface Presenter{
+    interface Presenter {
 
         fun attachView(view: ImageContract.View)
 

@@ -19,6 +19,10 @@ class ButtonsPresenter : ButtonsContract.Presenter {
     override fun loadVectorImage(): List<Figure> =
             dataManager.loadVectorImage()
 
+    override fun saveVectorImage(list: List<Figure>) {
+            dataManager.saveVectorImage(list)
+    }
+
     override fun attachView(view: ButtonsContract.View) {
         this.view = view
         dataManager = DataManager(view as Component)

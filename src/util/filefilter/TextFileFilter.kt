@@ -3,12 +3,14 @@ package util.filefilter
 import java.io.File
 import javax.swing.filechooser.FileFilter
 
-class TextFileFilter private constructor(): FileFilter() {
+class TextFileFilter private constructor() : FileFilter() {
 
-    private object Holder {val INSTANCE = TextFileFilter()}
+    private object Holder {
+        val INSTANCE = TextFileFilter()
+    }
 
     companion object {
-        val instance: TextFileFilter by lazy {Holder.INSTANCE}
+        val instance: TextFileFilter by lazy { Holder.INSTANCE }
     }
 
     object Extensions {

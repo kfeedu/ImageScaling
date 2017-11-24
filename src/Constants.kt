@@ -1,6 +1,4 @@
-
 const val APP_NAME = "GrafikaLista3"
-
 
 //App dimensions
 const val WINDOW_WIDTH = 1200

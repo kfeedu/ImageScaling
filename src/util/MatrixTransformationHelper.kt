@@ -4,7 +4,6 @@ import org.ejml.simple.SimpleMatrix
 
 class MatrixTransformationHelper {
 
-
     var transformationMatrix: SimpleMatrix = SimpleMatrix.identity(3)
 
     fun rotate(angle: Double, clockwise: Boolean): MatrixTransformationHelper {
@@ -26,10 +25,10 @@ class MatrixTransformationHelper {
         val matrix = SimpleMatrix.identity(3)
         matrix.set(0, 0, Math.cos(Math.toRadians(angle)))
         matrix.set(1, 1, Math.cos(Math.toRadians(angle)))
-        if(clockwise){
+        if (clockwise) {
             matrix.set(0, 1, Math.sin(Math.toRadians(angle)))
             matrix.set(1, 0, -Math.sin(Math.toRadians(angle)))
-        }else{
+        } else {
             matrix.set(0, 1, -Math.sin(Math.toRadians(angle)))
             matrix.set(1, 0, Math.sin(Math.toRadians(angle)))
         }
@@ -38,8 +37,8 @@ class MatrixTransformationHelper {
 
     private fun getTransitionMatrix(x: Double, y: Double): SimpleMatrix {
         val matrix = SimpleMatrix.identity(3)
-        matrix.set(2,0, x)
-        matrix.set(2,1, y)
+        matrix.set(2, 0, x)
+        matrix.set(2, 1, y)
         return matrix
     }
 

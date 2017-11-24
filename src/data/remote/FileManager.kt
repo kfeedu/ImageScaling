@@ -5,8 +5,6 @@ import data.model.figure.Line
 import data.model.figure.Polygon
 import data.model.figure.Rectangle
 import data.model.transformation.TransformationType
-import javafx.scene.text.Text
-import org.ejml.simple.SimpleMatrix
 import util.filefilter.FileExtensionHelper
 import java.awt.Component
 import java.awt.image.BufferedImage
@@ -16,6 +14,7 @@ import javax.swing.JFileChooser
 import util.filefilter.FileFilterType
 import java.nio.file.Paths
 import java.nio.file.Files
+import java.io.PrintWriter
 
 
 class FileManager private constructor() {
@@ -55,8 +54,16 @@ class FileManager private constructor() {
         return image
     }
 
-    fun saveVectorImage() {
-
+    fun saveVectorImage(list: List<Figure>, context: Component) {
+        val returnVal = fc.showSaveDialog(context)
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            PrintWriter(Files.newBufferedWriter(
+                    Paths.get(fc.selectedFile.canonicalPath))).use { pw ->
+                list.forEach { figure ->
+                    pw.println(figure.toString())
+                }
+            }
+        }
     }
 
     fun loadVectorImage(context: Component): List<Figure> {
@@ -110,7 +117,7 @@ class FileManager private constructor() {
                 Files.lines(Paths.get(filePath)).use { lines ->
                     lines.forEach { line ->
                         val transformation = getTransformationFromLine(line)
-                        when(line[0]){
+                        when (line[0]) {
                             'R' -> transformations.put(TransformationType.ROTATE, transformation)
                             'S' -> transformations.put(TransformationType.SCALE, transformation)
                             'T' -> transformations.put(TransformationType.TRANSITION, transformation)
