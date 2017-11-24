@@ -16,11 +16,8 @@ import javax.swing.JPanel
 class ImagePanel : JPanel(), ImageContract.View, ButtonsPanel.ImageIOListener, SettingsPanel.ImageTransformListener {
 
     private var presenter = ImagePresenter()
-    //    private lateinit var image: BufferedImage
-//    private lateinit var figures: List<Figure>
-//    private lateinit var figuresManipulator: VectorImageManipulator
-    private lateinit var imageManipulator: ImageManipulator
     var imageType = ImageType.RASTER
+    private lateinit var imageManipulator: ImageManipulator
     var offsetX = 0
     var offsetY = 0
     var imageOffsetX = 0
@@ -93,6 +90,8 @@ class ImagePanel : JPanel(), ImageContract.View, ButtonsPanel.ImageIOListener, S
         imageManipulator = RasterImageManipulator(image)
         imageType = ImageType.RASTER
         preferredSize = Dimension(image.width, image.height)
+        offsetX = image.width / 2
+        offsetY = image.height / 2
         refresh()
     }
 
