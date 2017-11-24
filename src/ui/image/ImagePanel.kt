@@ -13,6 +13,11 @@ import java.awt.Graphics2D
 import java.awt.image.BufferedImage
 import javax.swing.JPanel
 
+enum class ImageType {
+    RASTER,
+    VECTOR
+}
+
 class ImagePanel : JPanel(), ImageContract.View, ButtonsPanel.ImageIOListener, SettingsPanel.ImageTransformListener {
 
     private var presenter = ImagePresenter()
@@ -23,6 +28,9 @@ class ImagePanel : JPanel(), ImageContract.View, ButtonsPanel.ImageIOListener, S
     var imageOffsetX = 0
     var imageOffsetY = 0
 
+    var lineParamA = 0.0
+    var lineParamB = 0.0
+
     init {
         presenter.attachView(this)
     }
@@ -32,12 +40,15 @@ class ImagePanel : JPanel(), ImageContract.View, ButtonsPanel.ImageIOListener, S
         when (imageType) {
             ImageType.RASTER -> {
                 if (::imageManipulator.isInitialized)
-                  presenter.drawRaster(g as Graphics2D, (imageManipulator as RasterImageManipulator).resultImage, offsetX, offsetY)
+                    presenter.drawRaster(g as Graphics2D, (imageManipulator as RasterImageManipulator).resultImage, offsetX, offsetY)
             }
             ImageType.VECTOR ->
                 presenter.drawVector((imageManipulator as VectorImageManipulator).rawVectors, g as Graphics2D, imageOffsetX, imageOffsetY)
         }
         presenter.drawCoordinateSystem(g as Graphics2D, preferredSize, offsetX, offsetY)
+        if (lineParamA != 0.0 && lineParamA != 0.0)
+            presenter.drawLine(g, lineParamA, lineParamB, preferredSize,
+                    offsetX, offsetY)
     }
 
     //MVP functions
@@ -67,15 +78,13 @@ class ImagePanel : JPanel(), ImageContract.View, ButtonsPanel.ImageIOListener, S
     //ImageTransformListener functions
     override fun transformImage(transformations: List<Transformation>) {
         presenter.transformImage(transformations, imageManipulator)
-//
-//        when(imageType){
-//            ImageType.VECTOR ->
-//                presenter.transformVectorImage(transformations, figuresManipulator)
-//            ImageType.RASTER ->{
-//                //TESTY
-//                presenter.transformVectorImage(transformations, imageManipulator)
-//            }
-//        }
+    }
+
+    override fun drawLine(a: Double, b: Double) {
+        lineParamA = a
+        lineParamB = b
+        repaint()
+        refresh()
     }
 
     //ImageIOListener functions
@@ -108,9 +117,3 @@ class ImagePanel : JPanel(), ImageContract.View, ButtonsPanel.ImageIOListener, S
         refresh()
     }
 }
-
-enum class ImageType {
-    RASTER,
-    VECTOR
-}
-

@@ -2,13 +2,15 @@ package ui.image
 
 import data.model.figure.Figure
 import data.model.transformation.Transformation
+import org.ejml.simple.SimpleMatrix
+import util.MatrixTransformationHelper
 import util.image.ImageManipulator
 import util.image.VectorImageManipulator
 import java.awt.Color
 import java.awt.Dimension
-import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage
+import kotlin.math.roundToInt
 
 class ImagePresenter : ImageContract.Presenter {
 
@@ -20,15 +22,6 @@ class ImagePresenter : ImageContract.Presenter {
         view.setOffset(imageManipulator.offsetX, imageManipulator.offsetY)
         view.setPrefferedSize(Dimension(imageManipulator.width, imageManipulator.height))
         view.setManipulator(imageManipulator)
-        view.refresh()
-    }
-
-    override fun transformVectorImage(transformations: List<Transformation>, figuresManipulator: VectorImageManipulator) {
-        figuresManipulator.transformImage(transformations)
-        view.setImageOffset(figuresManipulator.imageOffsetX, figuresManipulator.imageOffsetY)
-        view.setOffset(figuresManipulator.offsetX, figuresManipulator.offsetY)
-        view.setPrefferedSize(Dimension(figuresManipulator.width, figuresManipulator.height))
-        view.setManipulator(figuresManipulator)
         view.refresh()
     }
 
@@ -64,19 +57,6 @@ class ImagePresenter : ImageContract.Presenter {
             g.drawLine(offsetX + 3, j, offsetX - 3, j)
             g.drawLine(offsetX + 3, y - j, offsetX - 3, y - j)
         }
-
-
-//        g.drawLine(0, offsetY, dimension.width, offsetY)
-//        g.drawLine(offsetX, 0, offsetX, dimension.height)
-//
-//        for (i in dimension.width / 2..dimension.width step 20) {
-//            g.drawLine(i, offsetY + 3, i, offsetY - 3)
-//            g.drawLine(dimension.width - i, offsetY + 3, dimension.width - i, offsetY - 3)
-//        }
-//        for (j in dimension.height / 2..dimension.height step 20) {
-//            g.drawLine(offsetX + 3, j, offsetX - 3, j)
-//            g.drawLine(offsetX + 3, dimension.height - j, offsetX - 3, dimension.height - j)
-//        }
     }
 
     override fun setVectorImageDimension(figures: List<Figure>) {
@@ -94,6 +74,27 @@ class ImagePresenter : ImageContract.Presenter {
         view.setOffset(maxWidth / 2, maxHeight / 2)
         view.setImageOffset(0, 0)
         view.setPrefferedSize(Dimension(maxWidth, maxHeight))
+    }
+
+    override fun drawLine(g: Graphics2D, a: Double, b: Double, dimension: Dimension, offsetX: Int, offsetY: Int) {
+        val matrixHelper = MatrixTransformationHelper()
+        val transformationMatrix = matrixHelper.transit(-offsetX.toDouble(),-offsetY.toDouble()).
+                rotate(Math.toDegrees(Math.atan(a)), true).transit(0.0,-b).transit(offsetX.toDouble(), offsetY.toDouble())
+        var point1 = SimpleMatrix(1,3)
+        point1.set(0,0, offsetX.toDouble())
+        point1.set(0,1, dimension.height.toDouble())
+        point1.set(0,2, 1.0)
+
+        var point2 = SimpleMatrix(1,3)
+        point2.set(0,0, offsetX.toDouble())
+        point2.set(0,1, 0.0)
+        point2.set(0,2, 1.0)
+
+        point1 = point1.mult(transformationMatrix.transformationMatrix)
+        point2 = point2.mult(transformationMatrix.transformationMatrix)
+
+        g.drawLine(point1.get(0,0).roundToInt(), point1.get(0,1).roundToInt(),
+                point2.get(0,0).roundToInt(), point2.get(0,1).roundToInt())
     }
 
     override fun drawVector(figures: List<Figure>, g: Graphics2D, offsetX: Int, offsetY: Int) {

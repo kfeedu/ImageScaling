@@ -19,7 +19,11 @@ class SettingsPanel(private val listener: ImageTransformListener) : JPanel(), Se
 
     private val presenter = SettingsPresenter()
     private val loadTransformationButton = JButton("LOAD TRANSFORMATION")
-    private val transformButton = JButton("\\~T R A N S F O R M~/")
+    private val transformButton = JButton("\\\\ ~ T R A N S F O R M ~ //")
+
+    private val lineButton = JButton("SET")
+    private val lineFirstTextField = JTextField()
+    private val lineSecondTextField = JTextField()
 
     private val rotateButton = JButton("ADD")
     private val rotateFirstTextField = JTextField()
@@ -46,6 +50,8 @@ class SettingsPanel(private val listener: ImageTransformListener) : JPanel(), Se
 
     interface ImageTransformListener {
         fun transformImage(transformations: List<Transformation>)
+
+        fun drawLine(a: Double, b: Double)
     }
 
 
@@ -82,6 +88,9 @@ class SettingsPanel(private val listener: ImageTransformListener) : JPanel(), Se
                 transformationList.setListModel(DefaultListModel())
                 listener.transformImage(transInList)
             }
+            lineButton -> {
+                listener.drawLine(lineFirstTextField.text.toDouble(), lineSecondTextField.text.toDouble())
+            }
         }
     }
 
@@ -90,6 +99,8 @@ class SettingsPanel(private val listener: ImageTransformListener) : JPanel(), Se
         constraints.fill = GridBagConstraints.HORIZONTAL
 
         //setting pattern matching
+        (lineFirstTextField.document as AbstractDocument).documentFilter = DoubleOnlyFilter()
+        (lineSecondTextField.document as AbstractDocument).documentFilter = DoubleOnlyFilter()
         (rotateSecondTextField.document as AbstractDocument).documentFilter = BooleanFilter()
         (rotateFirstTextField.document as AbstractDocument).documentFilter = DoubleOnlyFilter()
         (scaleFirstTextField.document as AbstractDocument).documentFilter = DoubleOnlyFilter()
@@ -98,56 +109,91 @@ class SettingsPanel(private val listener: ImageTransformListener) : JPanel(), Se
         (transitionSecondTextField.document as AbstractDocument).documentFilter = DoubleOnlyFilter()
 
         //setting button listeners
+        lineButton.addActionListener(this)
         transformButton.addActionListener(this)
         loadTransformationButton.addActionListener(this)
         rotateButton.addActionListener(this)
         transitionButton.addActionListener(this)
         scaleButton.addActionListener(this)
 
-        val titleLabel = JLabel("TRANSFORMATIONS")
+        //LINE AREA
+        val lineLabel = JLabel("LINE")
         constraints.gridx = 1
         constraints.gridy = 0
         constraints.gridwidth = 2
-        add(titleLabel, constraints)
+        constraints.insets = Insets(0, 0, 10, 0)
+        add(lineLabel, constraints)
 
-
-        //Rotate Area y = 0 , 1
-        val rotateLabel = JLabel("Rotate:")
+        val lineFirstParLabel = JLabel("a:")
         constraints.gridx = 0
         constraints.gridy = 1
         constraints.gridwidth = 1
+        constraints.insets = Insets(5, 5, 5, 5)
+        add(lineFirstParLabel, constraints)
+
+        val lineSecondParLabel = JLabel("b:")
+        constraints.gridx = 1
+        constraints.gridy = 1
+        add(lineSecondParLabel, constraints)
+
+        constraints.gridx = 0
+        constraints.gridy = 2
+        add(lineFirstTextField, constraints)
+
+        constraints.gridx = 1
+        constraints.gridy = 2
+        add(lineSecondTextField, constraints)
+
+        constraints.gridx = 2
+        constraints.gridy = 2
+        add(lineButton, constraints)
+
+        //TRANSFORTMATION AREA
+        val titleLabel = JLabel("TRANSFORMATIONS")
+        constraints.gridx = 1
+        constraints.gridy = 3
+        constraints.gridwidth = 2
         constraints.insets = Insets(20, 0, 0, 0)
+        add(titleLabel, constraints)
+
+
+        //Rotate Area y = 4,5,6
+        val rotateLabel = JLabel("Rotate:")
+        constraints.gridx = 0
+        constraints.gridy = 4
+        constraints.gridwidth = 1
+        constraints.insets = Insets(10, 0, 0, 0)
         add(rotateLabel, constraints)
         constraints.insets = Insets(5, 5, 5, 5)
 
 
         val rotateFirstParLabel = JLabel("Angle:")
         constraints.gridx = 0
-        constraints.gridy = 2
+        constraints.gridy = 5
         add(rotateFirstParLabel, constraints)
 
 
         val rotateSecondParLabel = JLabel("Clockwise(0/1):")
         constraints.gridx = 1
-        constraints.gridy = 2
+        constraints.gridy = 5
         add(rotateSecondParLabel, constraints)
 
         constraints.gridx = 0
-        constraints.gridy = 3
+        constraints.gridy = 6
         add(rotateFirstTextField, constraints)
 
         constraints.gridx = 1
-        constraints.gridy = 3
+        constraints.gridy = 6
         add(rotateSecondTextField, constraints)
 
         constraints.gridx = 2
-        constraints.gridy = 3
+        constraints.gridy = 6
         add(rotateButton, constraints)
 
-        //TRANSITION AREA y = 2,3
+        //TRANSITION AREA y = 7,8,9
         val transitionLabel = JLabel("Transition:")
         constraints.gridx = 0
-        constraints.gridy = 4
+        constraints.gridy = 7
         constraints.gridwidth = 1
         constraints.insets = Insets(10, 0, 0, 0)
         add(transitionLabel, constraints)
@@ -155,30 +201,30 @@ class SettingsPanel(private val listener: ImageTransformListener) : JPanel(), Se
 
         val transitionFirstParLabel = JLabel("x:")
         constraints.gridx = 0
-        constraints.gridy = 5
+        constraints.gridy = 8
         add(transitionFirstParLabel, constraints)
 
         val transitionSecondParLabel = JLabel("y:")
         constraints.gridx = 1
-        constraints.gridy = 5
+        constraints.gridy = 8
         add(transitionSecondParLabel, constraints)
 
         constraints.gridx = 0
-        constraints.gridy = 6
+        constraints.gridy = 9
         add(transitionFirstTextField, constraints)
 
         constraints.gridx = 1
-        constraints.gridy = 6
+        constraints.gridy = 9
         add(transitionSecondTextField, constraints)
 
         constraints.gridx = 2
-        constraints.gridy = 6
+        constraints.gridy = 9
         add(transitionButton, constraints)
 
-        //SCALE AREA y = 4,5
+        //SCALE AREA y = 10,11,12
         val scaleLabel = JLabel("Scale:")
         constraints.gridx = 0
-        constraints.gridy = 7
+        constraints.gridy = 10
         constraints.gridwidth = 1
         constraints.insets = Insets(10, 0, 0, 0)
         add(scaleLabel, constraints)
@@ -186,44 +232,44 @@ class SettingsPanel(private val listener: ImageTransformListener) : JPanel(), Se
 
         val scaleFirstParLabel = JLabel("x:")
         constraints.gridx = 0
-        constraints.gridy = 8
+        constraints.gridy = 11
         add(scaleFirstParLabel, constraints)
 
 
         val scaleSecondParLabel = JLabel("y:")
         constraints.gridx = 1
-        constraints.gridy = 8
+        constraints.gridy = 11
         add(scaleSecondParLabel, constraints)
 
 
         constraints.gridx = 0
-        constraints.gridy = 9
+        constraints.gridy = 12
         add(scaleFirstTextField, constraints)
 
         constraints.gridx = 1
-        constraints.gridy = 9
+        constraints.gridy = 12
         add(scaleSecondTextField, constraints)
 
         constraints.gridx = 2
-        constraints.gridy = 9
+        constraints.gridy = 12
         add(scaleButton, constraints)
 
 
         //LIST PANEL
         constraints.gridx = 0
-        constraints.gridy = 10
+        constraints.gridy = 13
         constraints.gridwidth = 3
         add(transformationList, constraints)
 
         //LOAD TRANSFORMATION BUTTON
         constraints.gridx = 0
-        constraints.gridy = 11
+        constraints.gridy = 14
         constraints.gridwidth = 3
         add(loadTransformationButton, constraints)
 
         //DO TRANSFORMATION BUTTON
         constraints.gridx = 0
-        constraints.gridy = 12
+        constraints.gridy = 15
         constraints.gridwidth = 3
         add(transformButton, constraints)
     }
