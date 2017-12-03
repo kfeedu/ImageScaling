@@ -83,8 +83,15 @@ class SettingsPanel(private val listener: ImageTransformListener) : JPanel(), Se
             }
             transformButton -> {
                 val transInList = mutableListOf<Transformation>()
-                for (item in transformationList.transformations.elements())
-                    transInList.add(item)
+                for (item in transformationList.transformations.elements()){
+                    if(item.type == TransformationType.SCALE){
+                        transInList.add(Transformation(item.x + 0.00001, item.y + 0.00001, TransformationType.SCALE))
+                    }else{
+                        transInList.add(item)
+                    }
+
+
+                }
                 transformationList.setListModel(DefaultListModel())
                 listener.transformImage(transInList)
             }

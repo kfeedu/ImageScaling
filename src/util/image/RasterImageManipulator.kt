@@ -75,8 +75,8 @@ class RasterImageManipulator(private var rawImage: BufferedImage) : ImageManipul
                 point.set(0, 1, y.toDouble())
                 point.set(0, 2, 1.0)
                 point = point.mult(invertedTransformMatrix)
-                val xDst = point.get(0, 0) //* ratioX
-                val yDst = point.get(0, 1) //* ratioY
+                val xDst = point.get(0, 0)
+                val yDst = point.get(0, 1)
 
                 //to je hack xdd
                 try {
@@ -89,22 +89,27 @@ class RasterImageManipulator(private var rawImage: BufferedImage) : ImageManipul
     }
 
     private fun getRgbBilinear(xDst: Double, yDst: Double): Int {
-        //to je kolejny hack XD
         try {
-            val point00 = getIntFromRGB(rawImage.getRGB(xDst.nextDown().roundToInt(), yDst.nextUp().roundToInt()))
-            val point01 = getIntFromRGB(rawImage.getRGB(xDst.nextUp().roundToInt(), yDst.nextUp().roundToInt()))
-            val point10 = getIntFromRGB(rawImage.getRGB(xDst.nextDown().roundToInt(), yDst.nextDown().roundToInt()))
-            val point11 = getIntFromRGB(rawImage.getRGB(xDst.nextUp().roundToInt(), yDst.nextDown().roundToInt()))
+            val xCeil = Math.ceil(xDst).toInt()
+            val yCeil = Math.ceil(yDst).toInt()
+
+            val point11 = getIntFromRGB(rawImage.getRGB(xCeil, yCeil))
+            val point00 = getIntFromRGB(rawImage.getRGB(xCeil - 1, yCeil - 1))
+            val point01 = getIntFromRGB(rawImage.getRGB(xCeil - 1, yCeil))
+            val point10 = getIntFromRGB(rawImage.getRGB(xCeil, yCeil - 1))
 
             val a = xDst - xDst.toInt()
             val b = yDst - yDst.toInt()
 
+//            println("a: $a b: $b 00:(${xCeil - 1},${yCeil-1}) 01:(${xCeil - 1},${yCeil}) 10:(${xCeil},${yCeil -1}) 11:(${xCeil},${yCeil})")
+
+
             val red = bilinearInterpolation(a, b, point00.first.toDouble(), point01.first.toDouble(),
-                    point10.first.toDouble(), point11.first.toDouble()).roundToInt()
+                    point10.first.toDouble(), point11.first.toDouble()).toInt()
             val green = bilinearInterpolation(a, b, point00.second.toDouble(), point01.second.toDouble(),
-                    point10.second.toDouble(), point11.second.toDouble()).roundToInt()
+                    point10.second.toDouble(), point11.second.toDouble()).toInt()
             val blue = bilinearInterpolation(a, b, point00.third.toDouble(), point01.third.toDouble(),
-                    point10.third.toDouble(), point11.third.toDouble()).roundToInt()
+                    point10.third.toDouble(), point11.third.toDouble()).toInt()
 
             return int2RGB(red, green, blue)
         } catch (ex: Exception) {
@@ -113,9 +118,23 @@ class RasterImageManipulator(private var rawImage: BufferedImage) : ImageManipul
     }
 
     private fun bilinearInterpolation(a: Double, b: Double, point00: Double, point01: Double, point10: Double, point11: Double): Double {
-        val fA0 = (1.0 - a) * point00 + a * point10
-        val fA1 = (1.0 - a) * point01 + a * point11
-        return (1.0 - b) * fA0 + b * fA1
+        var aa = a
+        var bb = b
+        if(a < 0.01){
+            aa = 0.0
+        }
+        if(a > 0.99){
+            aa = 1.0
+        }
+        if(b > 0.99){
+            bb = 1.0
+        }
+        if(b<0.01){
+            bb = 0.0
+        }
+        val fA0 = (1.0 - aa) * point00 + aa * point10
+        val fA1 = (1.0 - aa) * point01 + aa * point11
+        return (1.0-bb) * fA0 + bb * fA1
     }
 
     private fun getActualDimension(): Dimension {

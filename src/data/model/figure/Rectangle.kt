@@ -1,6 +1,8 @@
 package data.model.figure
 
 import java.awt.Graphics2D
+import java.awt.Point
+import java.awt.Rectangle
 
 class Rectangle(var startPoint: Pair<Int, Int>, var endPoint: Pair<Int, Int>) : Figure() {
     override fun draw(graphics2D: Graphics2D, offsetX: Int, offsetY: Int) {
@@ -16,7 +18,10 @@ class Rectangle(var startPoint: Pair<Int, Int>, var endPoint: Pair<Int, Int>) : 
             y += height
             height = -height
         }
-        graphics2D.drawRect(x + offsetX, y + offsetY, width, height)
+        var rectangle = Rectangle(Point(startPoint.first + offsetX, startPoint.second + offsetY))
+        rectangle.add(Point(endPoint.first + offsetX, endPoint.second + offsetY))
+        graphics2D.drawRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height)
+//        graphics2D.drawRect(x + offsetX, y + offsetY, width, height)
     }
 
     override fun getPointPairs(): List<Pair<Int, Int>> {
