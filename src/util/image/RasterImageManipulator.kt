@@ -4,8 +4,6 @@ import data.model.transformation.Transformation
 import org.ejml.simple.SimpleMatrix
 import java.awt.Dimension
 import java.awt.image.BufferedImage
-import kotlin.math.nextDown
-import kotlin.math.nextUp
 import kotlin.math.roundToInt
 
 class RasterImageManipulator(private var rawImage: BufferedImage) : ImageManipulator() {
@@ -61,7 +59,7 @@ class RasterImageManipulator(private var rawImage: BufferedImage) : ImageManipul
         }
         val resultDimension = getActualDimension()
         resultImage = BufferedImage(resultDimension.width, resultDimension.height, BufferedImage.TYPE_INT_RGB)
-        refreshImageProperites()
+        refreshImageProperties()
 
         val invertedTransformMatrix = cumulativeTransformMatrix.invert()
         //offsets to position image in BufferedImage
@@ -78,12 +76,7 @@ class RasterImageManipulator(private var rawImage: BufferedImage) : ImageManipul
                 val xDst = point.get(0, 0)
                 val yDst = point.get(0, 1)
 
-                //to je hack xdd
-                try {
-                    resultImage.setRGB(x + Math.abs(xOffset.first), y + Math.abs(yOffset.first), getRgbBilinear(xDst, yDst))
-                } catch (ex: Exception) {
-
-                }
+                resultImage.setRGB(x + Math.abs(xOffset.first), y + Math.abs(yOffset.first), getRgbBilinear(xDst, yDst))
             }
         }
     }
@@ -101,9 +94,6 @@ class RasterImageManipulator(private var rawImage: BufferedImage) : ImageManipul
             val a = xDst - xDst.toInt()
             val b = yDst - yDst.toInt()
 
-//            println("a: $a b: $b 00:(${xCeil - 1},${yCeil-1}) 01:(${xCeil - 1},${yCeil}) 10:(${xCeil},${yCeil -1}) 11:(${xCeil},${yCeil})")
-
-
             val red = bilinearInterpolation(a, b, point00.first.toDouble(), point01.first.toDouble(),
                     point10.first.toDouble(), point11.first.toDouble()).toInt()
             val green = bilinearInterpolation(a, b, point00.second.toDouble(), point01.second.toDouble(),
@@ -113,28 +103,15 @@ class RasterImageManipulator(private var rawImage: BufferedImage) : ImageManipul
 
             return int2RGB(red, green, blue)
         } catch (ex: Exception) {
+            //pixel out of array so returning white
+            return int2RGB(255, 255, 255)
         }
-        return int2RGB(255, 255, 255)
     }
 
     private fun bilinearInterpolation(a: Double, b: Double, point00: Double, point01: Double, point10: Double, point11: Double): Double {
-        var aa = a
-        var bb = b
-        if(a < 0.01){
-            aa = 0.0
-        }
-        if(a > 0.99){
-            aa = 1.0
-        }
-        if(b > 0.99){
-            bb = 1.0
-        }
-        if(b<0.01){
-            bb = 0.0
-        }
-        val fA0 = (1.0 - aa) * point00 + aa * point10
-        val fA1 = (1.0 - aa) * point01 + aa * point11
-        return (1.0-bb) * fA0 + bb * fA1
+        val fA0 = (1.0 - a) * point00 + a * point10
+        val fA1 = (1.0 - a) * point01 + a * point11
+        return (1.0 - b) * fA0 + b * fA1
     }
 
     private fun getActualDimension(): Dimension {
@@ -145,7 +122,7 @@ class RasterImageManipulator(private var rawImage: BufferedImage) : ImageManipul
                 Math.abs(yOffset.first) + Math.abs(yOffset.second))
     }
 
-    private fun refreshImageProperites() {
+    private fun refreshImageProperties() {
         width = resultImage.width
         height = resultImage.height
 
